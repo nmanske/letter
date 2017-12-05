@@ -33,11 +33,15 @@ void testDisplay() {
   tft.print("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur adipiscing ante sed nibh tincidunt feugiat. Maecenas enim massa, fringilla sed malesuada et, malesuada sit amet turpis. Sed porttitor neque ut ante pretium vitae malesuada nunc bibendum. Nullam aliquet ultrices massa eu hendrerit. Ut sed nisi lorem. In vestibulum purus a tortor imperdiet posuere. ");
 }
 
-void setDisplay(String filename) {
+void setDisplay(String filename, bool rotate) {
+  if (rotate) tft.setRotation(3);
+  else tft.setRotation(0);
   bmpDraw(filename.c_str(), 0, 0);
 }
 
-void setDisplay(String filename, uint8_t x, uint8_t y) {
+void setDisplay(String filename, bool rotate, uint8_t x, uint8_t y) {
+  if (rotate) tft.setRotation(3);
+  else tft.setRotation(0);
   bmpDraw(filename.c_str(), x, y);
 }
 
