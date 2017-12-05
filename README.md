@@ -4,7 +4,7 @@ Show that special someone that you are thinking about them with an interactive, 
 
 The first menu option is the "Vault" where images and their associated dates and times are displayed. The second menu option is the "Bucket List" which contains places or things that you would like to add to the memory box.
 
-Right now updating the memory box will be a manual process. But if time allows I want the images to be automatically pulled from the card and arranged by date.
+Right now updating the memory box is still a manual process. But if time allows I want the images to be automatically pulled from the card and arranged by date.
 
 ### Materials
 

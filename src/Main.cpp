@@ -58,19 +58,20 @@ void loop() {
     while (buttonsNotPressed(prev_btn, back_btn, sel_btn, next_btn));
 
     if (screen_state == MAIN_MENU) {
-        Image current_img;
+        Image current_image;
         if (prev_btn) {
             if(--vault_index < 0) vault_index = NUM_VAULT_IMAGES - 1;
         }
         else if (next_btn) {
             if(++vault_index >= NUM_VAULT_IMAGES) vault_index = 0;
         }
-        current_img = vault[vault_index];
+        current_image = vault[vault_index];
+        setRotateImage(current_image.rotate);
         while (sel_btn) {
-            showDate("12/06/2017 @ 18:31", current_img.rotate);
+            showDate("12/06/2017 @ 18:31");
             sel_btn = digitalRead(SELECT);
         }
-        displayImage(current_img.filename, current_img.rotate);
+        displayImage(current_image.filename);
     }
 
 }

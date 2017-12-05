@@ -15,6 +15,7 @@
 #define SD_CS    6  // chip select for sd card
 
 static Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
+static bool rotate_image;
 
 void initDisplay(void) {
   Serial.println("Initializing ST7735...");
@@ -26,24 +27,26 @@ void initDisplay(void) {
   }
 }
 
-void showDate(String date, bool rotate) {
-  if (rotate) tft.setCursor((TFT_HEIGHT-(CHAR_WIDTH*date.length()))/2, 0);
-  else        tft.setCursor((TFT_WIDTH-(CHAR_WIDTH*date.length()))/2, 0);
+void displayImage(String filename) {
+  bmpDraw(filename.c_str(), 0, 0);
+}
+
+void displayImage(String filename, uint8_t x, uint8_t y) {
+  bmpDraw(filename.c_str(), x, y);
+}
+
+void showDate(String date) {
+  if (rotate_image) tft.setCursor((TFT_HEIGHT-(CHAR_WIDTH*date.length()))/2, 0);
+  else              tft.setCursor((TFT_WIDTH-(CHAR_WIDTH*date.length()))/2, 0);
   tft.setTextColor(ST7735_YELLOW, ST7735_BLACK);
   tft.setTextWrap(true);
   tft.print(date);
 }
 
-void displayImage(String filename, bool rotate) {
-  if (rotate) tft.setRotation(3);
-  else        tft.setRotation(0);
-  bmpDraw(filename.c_str(), 0, 0);
-}
-
-void displayImage(String filename, bool rotate, uint8_t x, uint8_t y) {
-  if (rotate) tft.setRotation(3);
-  else        tft.setRotation(0);
-  bmpDraw(filename.c_str(), x, y);
+void setRotateImage(bool rotate) {
+  rotate_image = rotate;
+  if (rotate_image) tft.setRotation(3);
+  else              tft.setRotation(0);
 }
 
 /*******************************************************************
