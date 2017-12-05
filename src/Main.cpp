@@ -13,6 +13,7 @@ void setup() {
 }
 
 void loop() {
-    setDisplay("test.bmp");
+    //setDisplay("test.bmp");
+    testDisplay();
     delay(2000);
 }

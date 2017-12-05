@@ -3,19 +3,21 @@
 #include <SPI.h>
 #include <SD.h>
 
-#define DISPLAY_WIDTH 128
-#define DISPLAY_HEIGHT 160
+#include "Display.h"
 
-static Adafruit_ST7735 display = Adafruit_PCD8544(13, 11, 9, 10, 8);
+#define TFT_WIDTH 128
+#define TFT_HEIGHT 160
 
-#define DISPLAY_CS  10  // chip select for lcd
-#define DISPLAY_RST  9  // reset line for lcd
-#define DISPLAY_DC   8  // data/command line for lcd
-#define SD_CS    4  // chip select for sd card
+#define TFT_CS  10  // chip select for lcd
+#define TFT_RST  9  // reset line for lcd
+#define TFT_DC   8  // data/command line for lcd
+#define SD_CS        4  // chip select for sd card
+
+static Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
 void initDisplay(void) {
   Serial.println("Initializing ST7735...");
-  display.initR(INITR_BLACKTAB);
+  tft.initR(INITR_BLACKTAB);
   Serial.print("Initializing SD card...");
   if (!SD.begin(SD_CS)) {
     Serial.println("Failed to initialize SD card");
@@ -23,12 +25,21 @@ void initDisplay(void) {
   }
 }
 
+void testDisplay() {
+  uint16_t time = millis();
+  tft.fillScreen(ST7735_BLACK);
+  tft.setCursor(0, 0);
+  tft.setTextColor(ST7735_WHITE);
+  tft.setTextWrap(true);
+  tft.print("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur adipiscing ante sed nibh tincidunt feugiat. Maecenas enim massa, fringilla sed malesuada et, malesuada sit amet turpis. Sed porttitor neque ut ante pretium vitae malesuada nunc bibendum. Nullam aliquet ultrices massa eu hendrerit. Ut sed nisi lorem. In vestibulum purus a tortor imperdiet posuere. ");
+}
+
 void setDisplay(String filename) {
-  bmpDraw(filename, 0, 0);
+  bmpDraw(filename.c_str(), 0, 0);
 }
 
 void setDisplay(String filename, uint8_t x, uint8_t y) {
-  bmpDraw(filename, x, y);
+  bmpDraw(filename.c_str(), x, y);
 }
 
 /*******************************************************************
@@ -46,7 +57,7 @@ void setDisplay(String filename, uint8_t x, uint8_t y) {
 
 #define BUFFPIXEL 20
 
-void bmpDraw(char *filename, uint8_t x, uint8_t y) {
+void bmpDraw(const char *filename, uint8_t x, uint8_t y) {
 
   File     bmpFile;
   int      bmpWidth, bmpHeight;   // W+H in pixels
