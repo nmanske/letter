@@ -1,14 +1,14 @@
 #include <Arduino.h>
 
-#define PREVIOUS 2
-#define BACK 3
-#define SELECT 4
-#define NEXT 5
-
-void initButton() {
+void initButtons(uint8_t btn1, uint8_t btn2, uint8_t btn3, uint8_t btn4) {
     Serial.println("Initializing buttons...");
-    pinMode(PREVIOUS, INPUT);
-    pinMode(BACK, INPUT);
-    pinMode(SELECT, INPUT);
-    pinMode(NEXT, INPUT);
+    pinMode(btn1, INPUT);
+    pinMode(btn2, INPUT);
+    pinMode(btn3, INPUT);
+    pinMode(btn4, INPUT);
+}
+
+bool buttonsNotPressed(uint8_t btn1, uint8_t btn2, uint8_t btn3, uint8_t btn4) {
+    if (btn1 > 0 || btn2 > 0 || btn3 > 0 || btn4 > 0) return false;
+    return true;
 }
