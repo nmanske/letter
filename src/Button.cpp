@@ -1,14 +1,14 @@
 #include <Arduino.h>
 
-#define PREV_BTN 2
-#define BACK_BTN 3
-#define SELECT_BTN 4
-#define NEXT_BTN 5
+#define PREVIOUS 2
+#define BACK 3
+#define SELECT 4
+#define NEXT 5
 
 void initButton() {
     Serial.println("Initializing buttons...");
-    pinMode(PREV_BTN, INPUT);
-    pinMode(BACK_BTN, INPUT);
-    pinMode(SELECT_BTN, INPUT);
-    pinMode(NEXT_BTN, INPUT);
+    pinMode(PREVIOUS, INPUT);
+    pinMode(BACK, INPUT);
+    pinMode(SELECT, INPUT);
+    pinMode(NEXT, INPUT);
 }

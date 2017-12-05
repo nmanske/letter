@@ -11,14 +11,14 @@
 #define TFT_CS  10  // chip select for lcd
 #define TFT_RST  9  // reset line for lcd
 #define TFT_DC   8  // data/command line for lcd
-#define SD_CS        4  // chip select for sd card
+#define SD_CS    6  // chip select for sd card
 
 static Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
 void initDisplay(void) {
   Serial.println("Initializing ST7735...");
   tft.initR(INITR_BLACKTAB);
-  Serial.print("Initializing SD card...");
+  Serial.println("Initializing SD card...");
   if (!SD.begin(SD_CS)) {
     Serial.println("Failed to initialize SD card");
     return;
@@ -26,7 +26,6 @@ void initDisplay(void) {
 }
 
 void testDisplay() {
-  uint16_t time = millis();
   tft.fillScreen(ST7735_BLACK);
   tft.setCursor(0, 0);
   tft.setTextColor(ST7735_WHITE);
