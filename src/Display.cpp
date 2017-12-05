@@ -7,6 +7,7 @@
 
 #define TFT_WIDTH 128
 #define TFT_HEIGHT 160
+#define CHAR_WIDTH 6
 
 #define TFT_CS  10  // chip select for lcd
 #define TFT_RST  9  // reset line for lcd
@@ -25,23 +26,23 @@ void initDisplay(void) {
   }
 }
 
-void testDisplay() {
-  tft.fillScreen(ST7735_BLACK);
-  tft.setCursor(0, 0);
-  tft.setTextColor(ST7735_WHITE);
+void showDate(String date, bool rotate) {
+  if (rotate) tft.setCursor((TFT_HEIGHT-(CHAR_WIDTH*date.length()))/2, 0);
+  else        tft.setCursor((TFT_WIDTH-(CHAR_WIDTH*date.length()))/2, 0);
+  tft.setTextColor(ST7735_YELLOW, ST7735_BLACK);
   tft.setTextWrap(true);
-  tft.print("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur adipiscing ante sed nibh tincidunt feugiat. Maecenas enim massa, fringilla sed malesuada et, malesuada sit amet turpis. Sed porttitor neque ut ante pretium vitae malesuada nunc bibendum. Nullam aliquet ultrices massa eu hendrerit. Ut sed nisi lorem. In vestibulum purus a tortor imperdiet posuere. ");
+  tft.print(date);
 }
 
-void setDisplay(String filename, bool rotate) {
+void displayImage(String filename, bool rotate) {
   if (rotate) tft.setRotation(3);
-  else tft.setRotation(0);
+  else        tft.setRotation(0);
   bmpDraw(filename.c_str(), 0, 0);
 }
 
-void setDisplay(String filename, bool rotate, uint8_t x, uint8_t y) {
+void displayImage(String filename, bool rotate, uint8_t x, uint8_t y) {
   if (rotate) tft.setRotation(3);
-  else tft.setRotation(0);
+  else        tft.setRotation(0);
   bmpDraw(filename.c_str(), x, y);
 }
 
