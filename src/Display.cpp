@@ -18,10 +18,6 @@
 
 static Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
-static File root;
-static String images[MAX_IMAGES];
-static String bucketlist;
-
 static bool rotate_image;
 
 void initDisplay(void) {
@@ -32,8 +28,6 @@ void initDisplay(void) {
     Serial.println("Failed to initialize SD card");
     return;
   }
-  root = SD.open("/");
-  copyFileNames(root);
 }
 
 void displayImage(String filename) {
@@ -56,37 +50,6 @@ void setRotateImage(bool rotate) {
   rotate_image = rotate;
   if (rotate_image) tft.setRotation(3);
   else              tft.setRotation(0);
-}
-
-void copyFileNames(File dir) {
-  // int index = 0;
-  while (true) {
-    File entry =  dir.openNextFile();
-
-    if (! entry) break;
-    
-    String entry_str = String(entry.name());
-    String extension = entry_str.substring(entry_str.length()-3);
-
-    Serial.println(entry_str);
-    Serial.println(extension);
-
-    if (! entry.isDirectory()) {
-      Serial.println("Not a directory!");
-      if (extension.equals("BMP")) {
-        Serial.println("BMP FOUND");
-        // images[index] = entry_str;
-        // Serial.println("Filename array is " + images[index]);
-        // index++;
-      } else if (extension.equals("TXT")) {
-        Serial.println("TXT FOUND");
-        // Serial.println("Bucketlist filename is " + bucketlist);
-        // bucketlist = entry_str;
-      }
-    }
-
-    entry.close();
-  }
 }
 
 /*******************************************************************

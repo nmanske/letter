@@ -40,7 +40,7 @@ static int8_t vault_index = 0;
 
 void setup() {
     Serial.begin(BAUD_RATE);
-    while (!Serial);
+    while (! Serial);
     initDisplay();
     initButtons(PREVIOUS, BACK, SELECT, NEXT);
 }
