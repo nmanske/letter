@@ -6,6 +6,7 @@
 void initDisplay(void);
 
 void displayMainMenu(void);
+void updateModeSelection(void);
 void displayImage(String filename);
 void displayImage(String filename, uint8_t x, uint8_t y);
 void showDate(String date);

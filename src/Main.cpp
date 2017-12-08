@@ -15,8 +15,9 @@
 // Useful nums for array sizing and loops
 #define NUM_VAULT_IMAGES 4
 
-// State for correct screen display and button interpretation
-enum ScreenState { MAIN_MENU, VAULT };
+// States for correct screen display and button interpretation
+enum Mode { MAIN_MENU, VAULT, BUCKET_LIST };
+enum Selection { VAULT_SEL, BUCKET_LIST_SEL };
 
 // Format of each image loaded from SD card
 struct Image {
@@ -33,7 +34,10 @@ static const Image vault [NUM_VAULT_IMAGES] = {
 // ************************************************************************
 
 // Current state of screen as defined in SCREEN_STATES
-static ScreenState screen_state = MAIN_MENU;
+static Mode screen_mode = MAIN_MENU;
+
+// First, second, third, etc button starting at index 0
+static Selection mode_selection = VAULT_SEL;
 
 // Current image displayed on screen and pulled from vault array
 static int8_t vault_index = 0;
@@ -49,6 +53,7 @@ void loop() {
 
     uint8_t prev_btn, back_btn, sel_btn, next_btn;
 
+    while(! buttonsNotPressed(prev_btn, back_btn, sel_btn, next_btn));
     do {
         prev_btn = digitalRead(PREVIOUS);
         back_btn = digitalRead(BACK);
@@ -57,12 +62,23 @@ void loop() {
     }
     while (buttonsNotPressed(prev_btn, back_btn, sel_btn, next_btn));
 
-    if (screen_state == MAIN_MENU) {
-        Serial.println("At the main menu");
+    if (screen_mode == MAIN_MENU) {
+        if (sel_btn && mode_selection == VAULT_SEL) {
+            screen_mode = VAULT;
+        }
+        else if (prev_btn || next_btn) {
+            updateModeSelection();
+            if (mode_selection == VAULT_SEL) mode_selection = BUCKET_LIST_SEL;
+            else                             mode_selection = VAULT_SEL;
+        }
     }
-    else if (screen_state == VAULT) {
+    else if (screen_mode == VAULT) {
         Image current_image;
-        if (prev_btn) {
+        if (back_btn) {
+            screen_mode = MAIN_MENU;
+            displayMainMenu();
+        }
+        else if (prev_btn) {
             if(--vault_index < 0) vault_index = NUM_VAULT_IMAGES - 1;
         }
         else if (next_btn) {

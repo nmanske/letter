@@ -20,6 +20,8 @@
 // Define screen using user-defined pins
 static Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
+static bool vault_selected = true;
+
 // Rotate landscape style vault images using setter
 static bool rotate_image;
 
@@ -48,10 +50,20 @@ void displayMainMenu() {
   tft.setTextSize(2);
   tft.setCursor(15, 90);
   tft.println("Bucket List");
+  tft.drawRect(17, 48, 122, 28, ST7735_YELLOW);
+  tft.setTextSize(1);
 }
 
-void selectMenuButton() {
-  
+void updateModeSelection() {
+  if (vault_selected) {
+    tft.drawRect(17, 48, 122, 28, ST7735_CYAN);
+    tft.drawRect(8, 83, 144, 28, ST7735_YELLOW);
+    vault_selected = false;
+  } else {
+    tft.drawRect(17, 48, 122, 28, ST7735_YELLOW);
+    tft.drawRect(8, 83, 144, 28, ST7735_CYAN);
+    vault_selected = true;
+  }
 }
 
 void displayImage(String filename) {
