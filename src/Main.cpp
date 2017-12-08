@@ -16,7 +16,7 @@
 #define NUM_VAULT_IMAGES 4
 
 // State for correct screen display and button interpretation
-enum ScreenState { MAIN_MENU, VAULT_MENU };
+enum ScreenState { MAIN_MENU, VAULT };
 
 // Format of each image loaded from SD card
 struct Image {
@@ -58,6 +58,9 @@ void loop() {
     while (buttonsNotPressed(prev_btn, back_btn, sel_btn, next_btn));
 
     if (screen_state == MAIN_MENU) {
+        Serial.println("At the main menu");
+    }
+    else if (screen_state == VAULT) {
         Image current_image;
         if (prev_btn) {
             if(--vault_index < 0) vault_index = NUM_VAULT_IMAGES - 1;

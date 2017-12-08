@@ -1,5 +1,6 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_ST7735.h>
+#include <Fonts/FreeSansBold12pt7b.h>
 #include <SPI.h>
 #include <SD.h>
 
@@ -16,11 +17,13 @@
 
 #define MAX_IMAGES 20
 
+// Define screen using user-defined pins
 static Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
+// Rotate landscape style vault images using setter
 static bool rotate_image;
 
-void initDisplay(void) {
+void initDisplay() {
   Serial.println("Initializing ST7735...");
   tft.initR(INITR_BLACKTAB);
   Serial.println("Initializing SD card...");
@@ -28,6 +31,27 @@ void initDisplay(void) {
     Serial.println("Failed to initialize SD card");
     return;
   }
+  displayMainMenu();
+}
+
+void displayMainMenu() {
+  tft.setRotation(3);
+  tft.fillScreen(ST7735_CYAN);
+  tft.setFont(&FreeSansBold12pt7b);
+  tft.setTextColor(ST7735_BLACK);
+  tft.setCursor(6, 30);
+  tft.println("Memory Box");
+  tft.setFont();
+  tft.setTextSize(2);
+  tft.setCursor(25, 55);
+  tft.println("The Vault");
+  tft.setTextSize(2);
+  tft.setCursor(15, 90);
+  tft.println("Bucket List");
+}
+
+void selectMenuButton() {
+  
 }
 
 void displayImage(String filename) {
