@@ -42,6 +42,9 @@ static Selection mode_selection = VAULT_SEL;
 // Current image displayed on screen and pulled from vault array
 static int8_t vault_index = 0;
 
+// Disable date info when vault pic loading
+static bool loading_image = true;
+
 void setup() {
     Serial.begin(BAUD_RATE);
     while (! Serial);
@@ -65,6 +68,7 @@ void loop() {
     if (screen_mode == MAIN_MENU) {
         if (sel_btn && mode_selection == VAULT_SEL) {
             screen_mode = VAULT;
+            loading_image = true;
         }
         else if (prev_btn || next_btn) {
             updateModeSelection();
@@ -77,20 +81,24 @@ void loop() {
         if (back_btn) {
             screen_mode = MAIN_MENU;
             displayMainMenu();
+        } else { 
+            if (prev_btn) {
+                if(--vault_index < 0) vault_index = NUM_VAULT_IMAGES - 1;
+                loading_image = true;
+            }
+            else if (next_btn) {
+                if(++vault_index >= NUM_VAULT_IMAGES) vault_index = 0;
+                loading_image = true;
+            }
+            current_image = vault[vault_index];
+            setRotateImage(current_image.rotate);
+            while (sel_btn && !loading_image) {
+                showDate("12/06/2017 @ 18:31");
+                sel_btn = digitalRead(SELECT);
+            }
+            displayImage(current_image.filename);
+            loading_image = false;
         }
-        else if (prev_btn) {
-            if(--vault_index < 0) vault_index = NUM_VAULT_IMAGES - 1;
-        }
-        else if (next_btn) {
-            if(++vault_index >= NUM_VAULT_IMAGES) vault_index = 0;
-        }
-        current_image = vault[vault_index];
-        setRotateImage(current_image.rotate);
-        while (sel_btn) {
-            showDate("12/06/2017 @ 18:31");
-            sel_btn = digitalRead(SELECT);
-        }
-        displayImage(current_image.filename);
     }
 
 }
