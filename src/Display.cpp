@@ -41,6 +41,7 @@ void displayMainMenu() {
   tft.fillScreen(ST7735_CYAN);
   tft.setFont(&FreeSansBold12pt7b);
   tft.setTextColor(ST7735_BLACK);
+  tft.setTextSize(1);
   tft.setCursor(6, 30);
   tft.println("Memory Box");
   tft.setFont();
@@ -86,6 +87,16 @@ void setRotateImage(bool rotate) {
   rotate_image = rotate;
   if (rotate_image) tft.setRotation(3);
   else              tft.setRotation(0);
+}
+
+void displayTask(String task) {
+  tft.setRotation(3);
+  tft.fillScreen(ST7735_YELLOW);
+  tft.setTextColor(ST7735_BLACK);
+  tft.setTextWrap(true);
+  tft.setTextSize(2);
+  tft.setCursor(0, 10);
+  tft.print(task);
 }
 
 /*******************************************************************

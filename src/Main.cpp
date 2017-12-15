@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <avr/pgmspace.h>
 
 #include "Display.h"
 #include "Button.h"
@@ -14,6 +15,7 @@
 
 // Useful nums for array sizing and loops
 #define NUM_VAULT_IMAGES 6
+#define NUM_BUCKETLIST_ITEMS 10
 
 // States for correct screen display and button interpretation
 enum Mode { MAIN_MENU, VAULT, BUCKET_LIST };
@@ -27,10 +29,16 @@ struct Image {
 };
 
 // Images to cycle through in the vault
-static const Image vault [NUM_VAULT_IMAGES] = {
+const Image vault [NUM_VAULT_IMAGES] PROGMEM = {
     {"01.bmp", "11/01/15 @ 02:07:38", true}, {"02.bmp", "05/30/16 @ 19:15:01", true},
     {"03.bmp", "07/04/16 @ 21:02:11", true}, {"04.bmp", "04/09/17 @ 16:46:10", true},
     {"05.bmp", "07/09/17 @ 10:07:17", true}, {"06.bmp", "08/26/17 @ 20:45:49", true},
+};
+
+// Tasks to cycle through in the bucketlist
+const String bucketlist [NUM_BUCKETLIST_ITEMS] PROGMEM = {
+    "Traveling to Spain", "Attending NYC march",
+    "Completing Overcooked", "Going primitive camping" 
 };
 
 // ************************************************************************
@@ -42,7 +50,10 @@ static Mode screen_mode = MAIN_MENU;
 static Selection mode_selection = VAULT_SEL;
 
 // Current image displayed on screen and pulled from vault array
-static int8_t vault_index = 0;
+static uint8_t vault_index = 0;
+
+// Current task displayed on screen and pulled from bucketlist array
+static uint8_t bucketlist_index = 0;
 
 // Disable date info when vault pic loading
 static bool loading_image = true;
@@ -71,6 +82,8 @@ void loop() {
         if (sel_btn && mode_selection == VAULT_SEL) {
             screen_mode = VAULT;
             loading_image = true;
+        } else if (sel_btn && mode_selection == BUCKET_LIST_SEL) {
+            screen_mode = BUCKET_LIST;
         } else if (prev_btn || next_btn) {
             updateModeSelection();
             delay(250);
@@ -99,6 +112,21 @@ void loop() {
             }
             displayImage(current_image.filename);
             loading_image = false;
+        }
+    }
+    else if (screen_mode == BUCKET_LIST) {
+        if (back_btn) {
+            screen_mode = MAIN_MENU;
+            displayMainMenu();
+        } else if (prev_btn || next_btn || sel_btn) {
+            if (prev_btn) {
+                if(--bucketlist_index < 0) bucketlist_index = NUM_BUCKETLIST_ITEMS - 1;
+            }
+            else if (next_btn) {
+                if(++bucketlist_index >= NUM_VAULT_IMAGES) bucketlist_index = 0;
+            }
+            Serial.println(bucketlist[bucketlist_index]);
+            displayTask(bucketlist[bucketlist_index]);
         }
     }
 
