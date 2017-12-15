@@ -13,7 +13,7 @@
 #define NEXT 5
 
 // Useful nums for array sizing and loops
-#define NUM_VAULT_IMAGES 4
+#define NUM_VAULT_IMAGES 6
 
 // States for correct screen display and button interpretation
 enum Mode { MAIN_MENU, VAULT, BUCKET_LIST };
@@ -28,8 +28,9 @@ struct Image {
 
 // Images to cycle through in the vault
 static const Image vault [NUM_VAULT_IMAGES] = {
-    {"20171231.bmp", "18:35", true}, {"20111120.bmp", "01:11", true},
-    {"19940111.bmp", "12:00", true}, {"18870704.bmp", "00:01", false}
+    {"01.bmp", "11/01/15 @ 02:07:38", true}, {"02.bmp", "05/30/16 @ 19:15:01", true},
+    {"03.bmp", "07/04/16 @ 21:02:11", true}, {"04.bmp", "04/09/17 @ 16:46:10", true},
+    {"05.bmp", "07/09/17 @ 10:07:17", true}, {"06.bmp", "08/26/17 @ 20:45:49", true},
 };
 
 // ************************************************************************
@@ -93,10 +94,7 @@ void loop() {
             current_image = vault[vault_index];
             setRotateImage(current_image.rotate);
             while (sel_btn && !loading_image) {
-                String name = current_image.filename;
-                String date_from_file = name.substring(4,6) + '/' + name.substring(6,8) + '/' + name.substring(0,4) + 
-                                        " @ " + current_image.time;
-                showDate(date_from_file);
+                showDate(current_image.time);
                 sel_btn = digitalRead(SELECT);
             }
             displayImage(current_image.filename);
