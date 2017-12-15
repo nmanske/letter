@@ -22,13 +22,14 @@ enum Selection { VAULT_SEL, BUCKET_LIST_SEL };
 // Format of each image loaded from SD card
 struct Image {
     String filename;
+    String time;
     bool rotate;
 };
 
 // Images to cycle through in the vault
 static const Image vault [NUM_VAULT_IMAGES] = {
-    {"1-1-1.bmp", true}, {"1-1-2.bmp", true},
-    {"1-1-3.bmp", true}, {"parrot.bmp", false}
+    {"20171231.bmp", "18:35", true}, {"20111120.bmp", "01:11", true},
+    {"19940111.bmp", "12:00", true}, {"18870704.bmp", "00:01", false}
 };
 
 // ************************************************************************
@@ -55,8 +56,8 @@ void setup() {
 void loop() {
 
     uint8_t prev_btn, back_btn, sel_btn, next_btn;
+    Image current_image;
 
-    while(! buttonsNotPressed(prev_btn, back_btn, sel_btn, next_btn));
     do {
         prev_btn = digitalRead(PREVIOUS);
         back_btn = digitalRead(BACK);
@@ -69,19 +70,18 @@ void loop() {
         if (sel_btn && mode_selection == VAULT_SEL) {
             screen_mode = VAULT;
             loading_image = true;
-        }
-        else if (prev_btn || next_btn) {
+        } else if (prev_btn || next_btn) {
             updateModeSelection();
+            delay(250);
             if (mode_selection == VAULT_SEL) mode_selection = BUCKET_LIST_SEL;
             else                             mode_selection = VAULT_SEL;
         }
     }
     else if (screen_mode == VAULT) {
-        Image current_image;
         if (back_btn) {
             screen_mode = MAIN_MENU;
             displayMainMenu();
-        } else { 
+        } else if (prev_btn || next_btn || sel_btn) { 
             if (prev_btn) {
                 if(--vault_index < 0) vault_index = NUM_VAULT_IMAGES - 1;
                 loading_image = true;
@@ -93,7 +93,10 @@ void loop() {
             current_image = vault[vault_index];
             setRotateImage(current_image.rotate);
             while (sel_btn && !loading_image) {
-                showDate("12/06/2017 @ 18:31");
+                String name = current_image.filename;
+                String date_from_file = name.substring(4,6) + '/' + name.substring(6,8) + '/' + name.substring(0,4) + 
+                                        " @ " + current_image.time;
+                showDate(date_from_file);
                 sel_btn = digitalRead(SELECT);
             }
             displayImage(current_image.filename);
